@@ -23,23 +23,29 @@ var ContactForm = React.createClass({
 
 var Contact = React.createClass({
   render: function(){
+    var contactItem = this.props.contactItem;
     return (
       <tr >
-      {/* TODO */}
-      </tr>
-
+      <td>{contactItem.name}</td>
+    <td>{contactItem.address}</td>
+    <td>{contactItem.phone_number}</td>
+    </tr>
     ) ;
   }
 });
 
 var ContactList = React.createClass({
   render: function(){
-    var contactRows = null ;  // TODO
+    console.log('Debug: ContactList');
+    console.log(this.props.contacts);
+    var contactRows = this.props.contacts.map((contact) => {
+        return <Contact key={contact.phone_number} contactItem={contact}/>;
+  });  // TODO - done
     return (
       <tbody >
-      {contactRows}
-      <ContactForm />
-      </tbody>
+    {contactRows}
+    <ContactForm />
+    </tbody>
     ) ;
   }
 });
@@ -51,8 +57,8 @@ var ContactsTable = React.createClass({
       <thead>
       <tr>
       <th>Name</th>
-    <th>Address</th>
-    <th>Phone Number</th>
+      <th>Address</th>
+      <th>Phone Number</th>
     <th></th>
     <th></th>
     </tr>
