@@ -36,8 +36,6 @@ var Contact = React.createClass({
 
 var ContactList = React.createClass({
   render: function(){
-    console.log('Debug: ContactList');
-    console.log(this.props.contacts);
     var contactRows = this.props.contacts.map((contact) => {
         return <Contact key={contact.phone_number} contactItem={contact}/>;
   });
