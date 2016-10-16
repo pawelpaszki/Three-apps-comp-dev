@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 
 var Form = React.createClass({
   render : function() {
@@ -52,22 +52,34 @@ var NewsItem = React.createClass({
  }) ;
 
 // TODO (missing component)
+var NewsList = React.createClass({
+  render: function(){
+	  var newsList = this.props.posts.map((post) => {
+			return <NewsItem key={post.title} post={post} /> ;
+		}) ;
+		return (
+			<ul>
+			  {newsList}
+		  </ul>
+	  )
+  }	
+});
 
  var HackerApp = React.createClass({
-   render: function(){
-	return (
-		<div className="container">
-		  <div className="row">
-			<div className="col-md-6 col-md-offset-3">
-		 <div className="page-header">
-		 <Form />
-				 {/* TODO */}
-		 </div>
-		   </div>
-		  </div>
-		</div>
-	);
-  }
+	render: function(){
+		return (
+			<div className="container">
+			  <div className="row">
+				  <div className="col-md-6 col-md-offset-3">
+			      <div className="page-header">
+			        <NewsList posts={this.props.posts}/>
+					    <Form />
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		);
+	}
 });
 
 export default HackerApp;
