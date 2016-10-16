@@ -1,21 +1,53 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+ import React from 'react';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+    var SelectBox = React.createClass({
+      render: function(){
+           return (
+             <div className="col-md-10">
+            <input type="text" placeholder="Search" />
+            Sort by:
+            <select>
+              <option value="name">Alphabetical</option>
+              <option value="age">Newest</option>
+            </select>
+             </div>
+            );
+          }
+       });
 
-export default App;
+
+        // TODO (missing component)
+
+    var FilteredPhoneList = React.createClass({
+		render: function(){
+			var displayedPhones = this.props.phones.map(function(phone) {
+			  return <PhoneItem key={phone.id} phone={phone} /> ;
+			}) ;
+			return (
+					<div className="col-md-10">
+					  <ul className="phones">
+						  {displayedPhones}
+					  </ul>
+					</div>
+			  ) ;
+		}
+	});
+
+    var PhoneCatalogueApp = React.createClass({
+      render: function(){
+          return (
+              <div className="view-container">
+              <div className="view-frame">
+                 <div className="container-fluid">
+                   <div className="row">
+                       <SelectBox />
+                       {/* TODO */}
+                  </div> 
+                  </div>                   
+                </div>
+              </div>
+          );
+      }
+    });
+
+    export default PhoneCatalogueApp;
