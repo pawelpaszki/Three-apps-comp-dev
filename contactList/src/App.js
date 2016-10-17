@@ -1,4 +1,5 @@
 import React from 'react';
+import api from './test/stubAPI';
 
 var ContactForm = React.createClass({
   render: function(){
@@ -69,12 +70,13 @@ var ContactsTable = React.createClass({
 
 var ContactsApp = React.createClass({
   render: function(){
-    return (
-      <div>
-      <h1>Contact List.</h1>
-    <ContactsTable contacts={this.props.contacts}  />
-    </div>
-    );
+    var contacts = api.getAll();
+	  return (
+		<div>
+		   <h1>Contact List.</h1>
+		   <ContactsTable contacts={contacts}  />
+		</div>
+	  );
   }
 });
 
