@@ -34,7 +34,17 @@ var Contact = React.createClass({
 	},
 	handleEdit : function() {
 		 this.setState({ status : 'edit'} )
+	},
+    handleDelete : function() {
+		
+		this.setState({ status : 'delete'})
 	},    
+	handleConfirm : function(e) {
+		e.preventDefault();
+		this.props.clickHandler(
+		  this.props.contact.phone_number);
+		this.setState({status : ''} )
+	},
 	handleCancel : function() {
 		 this.setState({ status : '', 
 				 name: this.props.contact.name,
@@ -66,7 +76,7 @@ var Contact = React.createClass({
   render: function(){
    var activeButtons = buttons.normal ;
    var leftButtonHandler = this.handleEdit ;
-   var rightButtonHandler = null ;
+   var rightButtonHandler = this.handleDelete ;
    var fields = [
 		 <td key={'name'} >{this.state.name}</td>,
 		  <td key={'address'}>{this.state.address}</td>,
@@ -87,6 +97,14 @@ var Contact = React.createClass({
 				 value={this.state.phone_number}
 				 onChange={this.handlePhoneNumChange} /> </td>,
 		   ] ;
+	   }
+	   if (this.state.status === 'delete') {
+		   activeButtons = buttons.delete;
+		   leftButtonHandler = this.handleCancel;
+		   rightButtonHandler = this.handleConfirm;
+	   }
+	   if (this.state.status === 'add') {
+		   
 	   }
   return (
 		<tr >
@@ -111,7 +129,7 @@ var ContactList = React.createClass({
 	   var contactRows = this.props.contacts.map(function(contact){
 			return (
 			 <Contact key={contact.phone_number}  contact={contact} 
-				updateHandler={this.props.updateHandler} />
+				updateHandler={this.props.updateHandler} clickHandler={this.props.clickHandler} />
 			  ) ;
 		  }.bind(this) );
 	   return (
@@ -137,7 +155,7 @@ var ContactsTable = React.createClass({
     </tr>
     </thead>
     <ContactList contacts={this.props.contacts} 
-                    updateHandler={this.props.updateHandler}  />
+                    updateHandler={this.props.updateHandler} clickHandler={this.props.clickHandler} />
     </table>
     );
   }
@@ -149,13 +167,18 @@ var ContactsApp = React.createClass({
 		  this.setState({});  
 	  } 
   }, 
+  deleteContact : function(k) {
+	  if (!api.delete(k)) {
+		  this.setState({});
+	  }
+  },
   render: function(){
     var contacts = api.getAll();
 	  return (
 		<div>
 		   <h1>Contact List.</h1>
 		  <ContactsTable contacts={contacts} 
-                    updateHandler={this.updateContact}  /> 
+                    updateHandler={this.updateContact}  clickHandler={this.deleteContact}/> 
 		</div>
 	  );
   }
