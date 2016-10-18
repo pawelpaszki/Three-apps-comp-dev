@@ -3,6 +3,9 @@ import api from './test/stubAPI';
 import buttons from './config/buttonsConfig';
 
 var ContactForm = React.createClass({
+	logAdd : function() {
+		console.log('add');
+	},
   render: function(){
     return (
       <tr>
@@ -16,7 +19,7 @@ var ContactForm = React.createClass({
       <input type="text" className="form-control" />
       </td>
       <td>
-      <input type="button" className="btn btn-primary" value="Add"/>
+      <input type="button" className="btn btn-primary" value="Add" onClick={this.logAdd}/>
       </td>
       </tr>
     )
@@ -36,14 +39,23 @@ var Contact = React.createClass({
 		 this.setState({ status : 'edit'} )
 	},
     handleDelete : function() {
-		
 		this.setState({ status : 'delete'})
 	},    
-	handleConfirm : function(e) {
-		e.preventDefault();
-		this.props.clickHandler(
+	handleConfirm : function() {
+		this.props.deleteHandler(
 		  this.props.contact.phone_number);
 		this.setState({status : ''} )
+	},
+	handleAdd : function() {
+		var name = this.props.name.trim();
+		var address = this.props.address.trim();
+		var phone_number = this.props.phone_number.trim();
+		if (!name || !address || !phone_number) {
+		  return;
+		};
+		console.log(name + " " + address + " " + phone_number);
+		this.props.addHandler(name,address,phone_number);
+		this.setState({status : ''} );
 	},
 	handleCancel : function() {
 		 this.setState({ status : '', 
@@ -77,6 +89,7 @@ var Contact = React.createClass({
    var activeButtons = buttons.normal ;
    var leftButtonHandler = this.handleEdit ;
    var rightButtonHandler = this.handleDelete ;
+   var buttonHandler = null;
    var fields = [
 		 <td key={'name'} >{this.state.name}</td>,
 		  <td key={'address'}>{this.state.address}</td>,
@@ -104,7 +117,8 @@ var Contact = React.createClass({
 		   rightButtonHandler = this.handleConfirm;
 	   }
 	   if (this.state.status === 'add') {
-		   
+		   console.log('add');
+		   buttonHandler = this.handleAdd;
 	   }
   return (
 		<tr >
@@ -129,7 +143,7 @@ var ContactList = React.createClass({
 	   var contactRows = this.props.contacts.map(function(contact){
 			return (
 			 <Contact key={contact.phone_number}  contact={contact} 
-				updateHandler={this.props.updateHandler} clickHandler={this.props.clickHandler} />
+				updateHandler={this.props.updateHandler} deleteHandler={this.props.deleteHandler} addHandler={this.props.addHandler} />
 			  ) ;
 		  }.bind(this) );
 	   return (
@@ -155,7 +169,7 @@ var ContactsTable = React.createClass({
     </tr>
     </thead>
     <ContactList contacts={this.props.contacts} 
-                    updateHandler={this.props.updateHandler} clickHandler={this.props.clickHandler} />
+                    updateHandler={this.props.updateHandler} deleteHandler={this.props.deleteHandler} addHandler={this.props.addHandler}/>
     </table>
     );
   }
@@ -168,9 +182,13 @@ var ContactsApp = React.createClass({
 	  } 
   }, 
   deleteContact : function(k) {
-	  if (!api.delete(k)) {
-		  this.setState({});
-	  }
+	  api.delete(k)
+		this.setState({});
+	  
+  },
+  addContact : function(n,a,p) {
+	  api.add(n,a,p)
+	  this.setState({});
   },
   render: function(){
     var contacts = api.getAll();
@@ -178,7 +196,7 @@ var ContactsApp = React.createClass({
 		<div>
 		   <h1>Contact List.</h1>
 		  <ContactsTable contacts={contacts} 
-                    updateHandler={this.updateContact}  clickHandler={this.deleteContact}/> 
+                    updateHandler={this.updateContact}  deleteHandler={this.deleteContact} addHandler={this.addContact}/> 
 		</div>
 	  );
   }
