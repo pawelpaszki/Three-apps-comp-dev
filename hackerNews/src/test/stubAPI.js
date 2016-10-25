@@ -60,6 +60,37 @@ var posts = [
 			  return true ;
 			}
 		  return false ;
-	   }
-	  }
+	   
+	  },
+	  getPost : function(id) {
+             var result = null ;
+             var index = _.findIndex(posts, function(post) {
+                    return post.id === id;
+                    } );     
+             if (index !== -1) {                 
+                result = posts[index];
+                    }
+            return result ;
+            },
+         addComment : function(postId,c,n) {
+            var post = this.getPost(postId ) ;
+            var id = 1 ;
+            var last = _.last(post.comments) ;
+            if (last) {
+               id = last.id + 1 ;
+            }
+            post.comments.push({ 'id': id,  
+                     comment: c , author: n, upvotes: 0 } ) ;
+
+            },
+         upvoteComment : function(postId,commentId) {
+            var post = this.getPost(postId ) ;
+            var index = _.findIndex(post.comments, function(c) {
+                      return c.id === commentId;
+                    } );      
+             if (index !== -1) {                 
+                 post.comments[index].upvotes += 1 ;
+                }
+          }
+    }
 export default stubAPI ;
